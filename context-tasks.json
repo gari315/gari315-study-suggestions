@@ -1,0 +1,11 @@
+{
+  "avoidLastN": 2,
+  "tasks": [
+    { "id": "eng_listen", "label": "英語リスニングを10分", "subject": "英語", "contexts": ["移動中"], "weight": 3 },
+    { "id": "eng_word", "label": "英単語を10分", "subject": "英語", "contexts": ["移動中", "学校", "家"], "weight": 2 },
+    { "id": "math_4step", "label": "数学 4STEPを1テーマ", "subject": "数学", "contexts": ["家"], "weight": 3 },
+    { "id": "asa_test", "label": "朝テストの範囲を見直す", "subject": "小テスト", "contexts": ["学校"], "weight": 2 },
+    { "id": "chem_read", "label": "化学の教科書を1節読む", "subject": "化学", "contexts": ["家", "学校"], "weight": 1 },
+    { "id": "kokugo_kanji", "label": "漢字・語彙を10問", "subject": "国語", "contexts": ["移動中", "学校"], "weight": 1 }
+  ]
+}

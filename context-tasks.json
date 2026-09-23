@@ -1,13 +1,97 @@
 {
   "tasks": [
-    { "id": "eng_word", "label": "英単熟語", "subject": "英語", "contexts": ["移動中", "学校", "家"], "excludeFromLog": false },
-    { "id": "math_blue-chart", "label": "青チャート", "subject": "数学", "contexts": ["家", "学校"], "excludeFromLog": false },
-    { "id": "morning_test", "label": "朝テスト", "subject": "小テスト", "contexts": ["移動中", "学校", "家"], "excludeFromLog": false },
-    { "id": "chem_working", "label": "化学ワーク", "subject": "化学", "contexts": ["家", "学校"], "excludeFromLog": false },
-    { "id": "kokugo_test", "label": "国語頻出", "subject": "国語", "contexts": ["移動中", "学校", "家"], "excludeFromLog": false },
-    { "id": "task_none", "label": "休憩", "subject": "無", "contexts": ["移動中", "学校", "家"], "excludeFromLog": true },
-    { "id": "eng_grammar", "label": "英文法", "subject": "英語", "contexts": ["学校", "家"], "excludeFromLog": false },
-    { "id": "know_news", "label": "ニュース", "subject": "情報収集", "contexts": ["移動中"], "excludeFromLog": false },
-    { "id": "science", "label": "小テスト(物化)", "subject": "物理,化学", "contexts": ["家", "学校"], "excludeFromLog": false }
+    {
+      "id": "eng_word",
+      "label": "英単熟語",
+      "subject": "英語",
+      "contexts": [
+        "移動中",
+        "学校",
+        "家"
+      ],
+      "excludeFromLog": false
+    },
+    {
+      "id": "math_blue-chart",
+      "label": "青チャート",
+      "subject": "数学",
+      "contexts": [
+        "家",
+        "学校"
+      ],
+      "excludeFromLog": false
+    },
+    {
+      "id": "morning_test",
+      "label": "朝テスト",
+      "subject": "小テスト",
+      "contexts": [
+        "移動中",
+        "学校",
+        "家"
+      ],
+      "excludeFromLog": false
+    },
+    {
+      "id": "chem_working",
+      "label": "化学ワーク",
+      "subject": "化学",
+      "contexts": [
+        "家",
+        "学校"
+      ],
+      "excludeFromLog": false
+    },
+    {
+      "id": "kokugo_test",
+      "label": "国語頻出",
+      "subject": "国語",
+      "contexts": [
+        "移動中",
+        "学校",
+        "家"
+      ],
+      "excludeFromLog": false
+    },
+    {
+      "id": "task_none",
+      "label": "休憩",
+      "subject": "無",
+      "contexts": [
+        "移動中",
+        "学校",
+        "家"
+      ],
+      "excludeFromLog": true
+    },
+    {
+      "id": "eng_grammar",
+      "label": "英文法",
+      "subject": "英語",
+      "contexts": [
+        "学校",
+        "家"
+      ],
+      "excludeFromLog": false
+    },
+    {
+      "id": "know_news",
+      "label": "ニュース",
+      "subject": "情報収集",
+      "contexts": [
+        "移動中"
+      ],
+      "excludeFromLog": true
+    },
+    {
+      "id": "science",
+      "label": "小テスト(物化)",
+      "subject": "物理,化学",
+      "contexts": [
+        "家",
+        "学校"
+      ],
+      "excludeFromLog": false
+    }
   ]
 }

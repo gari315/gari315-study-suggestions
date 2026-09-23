@@ -1,97 +1,22 @@
 {
   "tasks": [
-    {
-      "id": "eng_word",
-      "label": "英単熟語",
-      "subject": "英語",
-      "contexts": [
-        "移動中",
-        "学校",
-        "家"
-      ],
-      "excludeFromLog": false
-    },
-    {
-      "id": "math_blue-chart",
-      "label": "青チャート",
-      "subject": "数学",
-      "contexts": [
-        "家",
-        "学校"
-      ],
-      "excludeFromLog": false
-    },
-    {
-      "id": "morning_test",
-      "label": "朝テスト",
-      "subject": "小テスト",
-      "contexts": [
-        "移動中",
-        "学校",
-        "家"
-      ],
-      "excludeFromLog": false
-    },
-    {
-      "id": "chem_working",
-      "label": "化学ワーク",
-      "subject": "化学",
-      "contexts": [
-        "家",
-        "学校"
-      ],
-      "excludeFromLog": false
-    },
-    {
-      "id": "kokugo_test",
-      "label": "国語頻出",
-      "subject": "国語",
-      "contexts": [
-        "移動中",
-        "学校",
-        "家"
-      ],
-      "excludeFromLog": false
-    },
-    {
-      "id": "task_none",
-      "label": "休憩",
-      "subject": "無",
-      "contexts": [
-        "移動中",
-        "学校",
-        "家"
-      ],
-      "excludeFromLog": true
-    },
-    {
-      "id": "eng_grammar",
-      "label": "英文法",
-      "subject": "英語",
-      "contexts": [
-        "学校",
-        "家"
-      ],
-      "excludeFromLog": false
-    },
-    {
-      "id": "know_news",
-      "label": "ニュース",
-      "subject": "情報収集",
-      "contexts": [
-        "移動中"
-      ],
-      "excludeFromLog": true
-    },
-    {
-      "id": "science",
-      "label": "小テスト(物化)",
-      "subject": "物理,化学",
-      "contexts": [
-        "家",
-        "学校"
-      ],
-      "excludeFromLog": false
-    }
+    { "id": "kokugo_test", "label": "国語頻出", "subject": "国語", "category": "kokugo", "contexts": ["移動中", "学校", "家"], "excludeFromLog": false },
+    { "id": "math_blue-chart", "label": "青チャート", "subject": "数学", "category": "math", "contexts": ["家", "学校"], "excludeFromLog": false },
+    { "id": "eng_word", "label": "英単熟語", "subject": "英語", "category": "eigo", "contexts": ["移動中", "学校", "家"], "excludeFromLog": false },
+    { "id": "eng_grammar", "label": "英文法", "subject": "英語", "category": "eigo", "contexts": ["学校", "家"], "excludeFromLog": false },
+    { "id": "chem_working", "label": "化学ワーク", "subject": "化学", "category": "rika", "contexts": ["家", "学校"], "excludeFromLog": false },
+    { "id": "science", "label": "小テスト物理", "subject": "物理", "category": "rika", "contexts": ["家", "学校"], "excludeFromLog": false },
+    { "id": "task_none", "label": "休憩", "subject": "休憩", "category": "kyukei", "contexts": ["移動中", "学校", "家"], "excludeFromLog": true },
+    { "id": "know_news", "label": "ニュース", "subject": "ニュース", "category": "news", "contexts": ["移動中"], "excludeFromLog": false },
+    { "id": "morning_test", "label": "朝テスト", "subject": "朝テスト", "category": "asatest", "contexts": ["移動中", "学校", "家"], "excludeFromLog": false },
+    { "id": "teiki_kokugo", "label": "国語", "subject": "国語", "category": "teiki", "contexts": ["移動中", "学校", "家"], "excludeFromLog": false },
+    { "id": "teiki_math", "label": "数学", "subject": "数学", "category": "teiki", "contexts": ["移動中", "学校", "家"], "excludeFromLog": false },
+    { "id": "teiki_eikomi", "label": "英コミュ", "subject": "英コミュ", "category": "teiki", "contexts": ["移動中", "学校", "家"], "excludeFromLog": false },
+    { "id": "teiki_ronri", "label": "論理表現", "subject": "論理表現", "category": "teiki", "contexts": ["移動中", "学校", "家"], "excludeFromLog": false },
+    { "id": "teiki_butsuri", "label": "物理", "subject": "物理", "category": "teiki", "contexts": ["移動中", "学校", "家"], "excludeFromLog": false },
+    { "id": "teiki_kagaku", "label": "化学", "subject": "化学", "category": "teiki", "contexts": ["移動中", "学校", "家"], "excludeFromLog": false },
+    { "id": "teiki_seibutsu", "label": "生物", "subject": "生物", "category": "teiki", "contexts": ["移動中", "学校", "家"], "excludeFromLog": false },
+    { "id": "teiki_hoken", "label": "保健", "subject": "保健", "category": "teiki", "contexts": ["移動中", "学校", "家"], "excludeFromLog": false },
+    { "id": "teiki_katei", "label": "家庭科", "subject": "家庭科", "category": "teiki", "contexts": ["移動中", "学校", "家"], "excludeFromLog": false }
   ]
 }

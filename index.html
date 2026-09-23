@@ -157,7 +157,32 @@
     border-bottom: 1px solid var(--line);
   }
   .admin-row input { font-size: 13px; padding: 8px; }
+  .admin-row .checkbox-field {
+    grid-column: span 2;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+  .admin-row .checkbox-field input { width: auto; }
   .admin-row .f-remove { grid-column: span 2; }
+
+  /* --- records --- */
+  .record-row { margin-bottom: 16px; }
+  .record-top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+  .record-track {
+    background: var(--line);
+    border-radius: 4px;
+    height: 8px;
+    overflow: hidden;
+  }
+  .record-fill { background: var(--accent); height: 100%; }
 
   button.primary, button.danger, .toolbar button {
     font-size: 14px;
@@ -195,7 +220,7 @@
     <h2>小テストの予定表</h2>
     <div id="scheduleList"></div>
     <div class="upload-box">
-      <input type="file" id="photoInput" accept="image/*" capture="environment">
+      <input type="file" id="photoInput" accept="image/*">
       <input type="text" id="captionInput" placeholder="メモ（任意）">
       <button id="uploadBtn" class="primary">追加する</button>
     </div>
@@ -218,8 +243,17 @@
     <div id="adminStatus"></div>
   </section>
 
+  <!-- 画面4: 勉強時間の記録 -->
+  <section id="view-records" hidden>
+    <button class="back" data-back>← 戻る</button>
+    <h2>今日の勉強時間</h2>
+    <div id="recordsList"></div>
+    <div id="recordsStatus"></div>
+  </section>
+
   <footer id="footerNav">
     <button id="openSchedule" class="link-btn">📋 小テストの予定表</button>
+    <button id="openRecords" class="link-btn">⏱ 勉強記録</button>
     <button id="openAdmin" class="link-btn">⚙️ 候補の管理</button>
   </footer>
 </main>
@@ -301,9 +335,12 @@ function showView(name) {
   document.getElementById("view-picker").hidden = name !== "picker";
   document.getElementById("view-schedule").hidden = name !== "schedule";
   document.getElementById("view-admin").hidden = name !== "admin";
+  document.getElementById("view-records").hidden = name !== "records";
   document.getElementById("footerNav").hidden = name !== "picker";
   document.getElementById("viewTitle").textContent =
-    name === "picker" ? "今なにする？" : name === "schedule" ? "小テストの予定表" : "候補の管理";
+    name === "picker" ? "今なにする？" :
+    name === "schedule" ? "小テストの予定表" :
+    name === "records" ? "勉強時間の記録" : "候補の管理";
 }
 
 /* ---------- 画面1: 選ぶ ---------- */
@@ -359,13 +396,50 @@ async function renderTaskList() {
   }
 }
 
+async function logSessionIfNeeded(oldState) {
+  if (!oldState || !oldState.task || !oldState.at) return;
+  const start = new Date(oldState.at);
+  const minutes = Math.round((Date.now() - start.getTime()) / 60000);
+  if (minutes <= 0) return;
+
+  const taskDef = (tasksCache || []).find(t => t.id === oldState.task.id);
+  const excluded = taskDef ? !!taskDef.excludeFromLog : false;
+
+  try {
+    const { data, sha } = await ghGetJSON("study-log.json");
+    data.sessions = data.sessions || [];
+    data.sessions.push({
+      taskId: oldState.task.id,
+      subject: oldState.task.subject,
+      label: oldState.task.label,
+      context: oldState.context,
+      start: oldState.at,
+      end: new Date().toISOString(),
+      minutes,
+      excluded
+    });
+    await ghPutJSON("study-log.json", data, sha, "log session");
+  } catch (e) {
+    // ログの保存に失敗しても選択自体は続行する(記録は副次的機能のため)
+    console.warn("log save failed", e);
+  }
+}
+
 async function selectTask(task) {
   const statusEl = document.getElementById("pickStatus");
   statusEl.textContent = "保存中...";
   statusEl.className = "";
   try {
     let sha = null;
-    try { sha = (await ghGetJSON("current-state.json")).sha; } catch (e) {}
+    let oldState = null;
+    try {
+      const r = await ghGetJSON("current-state.json");
+      sha = r.sha;
+      oldState = r.data;
+    } catch (e) {}
+
+    await logSessionIfNeeded(oldState);
+
     await ghPutJSON("current-state.json", {
       context: currentCtx,
       task: { id: task.id, label: task.label, subject: task.subject },
@@ -437,6 +511,51 @@ async function uploadPhoto() {
   }
 }
 
+/* ---------- 画面4: 勉強時間の記録 ---------- */
+async function renderRecords() {
+  const listEl = document.getElementById("recordsList");
+  const statusEl = document.getElementById("recordsStatus");
+  if (!getToken()) { statusEl.textContent = "先に「候補の管理」でトークンを設定してください"; statusEl.className = "error"; return; }
+  statusEl.textContent = "読み込み中...";
+  statusEl.className = "";
+  try {
+    const { data } = await ghGetJSON("study-log.json");
+    const todayStr = new Date().toDateString();
+    const todaySessions = (data.sessions || [])
+      .filter(s => !s.excluded)
+      .filter(s => new Date(s.start).toDateString() === todayStr);
+
+    const totals = {};
+    todaySessions.forEach(s => { totals[s.subject] = (totals[s.subject] || 0) + s.minutes; });
+
+    const subjects = Object.keys(totals).sort((a, b) => totals[b] - totals[a]);
+    const maxMin = Math.max(1, ...Object.values(totals));
+
+    listEl.innerHTML = "";
+    if (subjects.length === 0) {
+      listEl.innerHTML = `<p class="empty">今日の記録はまだありません</p>`;
+    }
+    subjects.forEach(subject => {
+      const min = totals[subject];
+      const pct = Math.round((min / maxMin) * 100);
+      const row = document.createElement("div");
+      row.className = "record-row";
+      row.innerHTML = `
+        <div class="record-top"><span>${escapeHtml(subject)}</span><span>${min}分</span></div>
+        <div class="record-track"><div class="record-fill" style="width:${pct}%"></div></div>
+      `;
+      listEl.appendChild(row);
+    });
+
+    const totalAll = Object.values(totals).reduce((a, b) => a + b, 0);
+    statusEl.textContent = `今日の合計: ${totalAll}分`;
+    statusEl.className = "ok";
+  } catch (e) {
+    statusEl.textContent = "読み込みに失敗しました: " + e.message;
+    statusEl.className = "error";
+  }
+}
+
 /* ---------- 画面3: 候補の管理 ---------- */
 let adminSha = null;
 
@@ -448,6 +567,7 @@ function makeRow(task) {
     <input type="text" class="f-subject" placeholder="教科" value="${escapeAttr(task.subject || "")}">
     <input type="text" class="f-contexts" placeholder="状態(カンマ区切り)" value="${escapeAttr((task.contexts || []).join(", "))}">
     <input type="text" class="f-id" placeholder="ID" value="${escapeAttr(task.id || "")}">
+    <label class="checkbox-field"><input type="checkbox" class="f-exclude" ${task.excludeFromLog ? "checked" : ""}> 勉強時間に含めない</label>
     <button class="danger f-remove">削除</button>
   `;
   div.querySelector(".f-remove").addEventListener("click", () => div.remove());
@@ -480,7 +600,8 @@ async function saveAdminTasks() {
     id: row.querySelector(".f-id").value.trim(),
     label: row.querySelector(".f-label").value.trim(),
     subject: row.querySelector(".f-subject").value.trim(),
-    contexts: row.querySelector(".f-contexts").value.split(",").map(s => s.trim()).filter(Boolean)
+    contexts: row.querySelector(".f-contexts").value.split(",").map(s => s.trim()).filter(Boolean),
+    excludeFromLog: row.querySelector(".f-exclude").checked
   }));
   const invalid = tasks.find(t => !t.id || !t.label || t.contexts.length === 0);
   if (invalid) { statusEl.textContent = "IDと提案文と状態は必須です（空の行があります）"; statusEl.className = "error"; return; }
@@ -508,6 +629,7 @@ document.getElementById("saveBtn").addEventListener("click", saveAdminTasks);
 document.getElementById("uploadBtn").addEventListener("click", uploadPhoto);
 
 document.getElementById("openSchedule").addEventListener("click", () => { showView("schedule"); renderSchedule(); });
+document.getElementById("openRecords").addEventListener("click", () => { showView("records"); renderRecords(); });
 document.getElementById("openAdmin").addEventListener("click", () => showView("admin"));
 document.querySelectorAll("[data-back]").forEach(b => b.addEventListener("click", () => showView("picker")));
 

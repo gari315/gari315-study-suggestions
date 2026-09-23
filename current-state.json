@@ -1,9 +1,9 @@
 {
   "context": "家",
   "task": {
-    "id": "eng_word",
-    "label": "英単語を10分",
-    "subject": "英語"
+    "id": "math_4step",
+    "label": "数学 4STEPを1テーマ",
+    "subject": "数学"
   },
-  "at": "2026-09-23T00:53:32.774Z"
+  "at": "2026-09-23T00:53:34.632Z"
 }

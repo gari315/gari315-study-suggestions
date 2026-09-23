@@ -1,9 +1,9 @@
 {
-  "context": "家",
+  "context": "学校",
   "task": {
-    "id": "math_4step",
-    "label": "数学 4STEPを1テーマ",
-    "subject": "数学"
+    "id": "chem_read",
+    "label": "化学の教科書を1節読む",
+    "subject": "化学"
   },
-  "at": "2026-09-23T01:01:51.024Z"
+  "at": "2026-09-23T01:02:02.620Z"
 }

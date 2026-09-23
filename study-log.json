@@ -69,6 +69,16 @@
       "end": "2026-09-23T08:44:38.052Z",
       "minutes": 68,
       "excluded": true
+    },
+    {
+      "taskId": "know_news",
+      "subject": "情報収集",
+      "label": "ニュース",
+      "context": "移動中",
+      "start": "2026-09-23T08:44:39.057Z",
+      "end": "2026-09-23T08:47:30.846Z",
+      "minutes": 3,
+      "excluded": true
     }
   ]
 }

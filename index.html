@@ -2,8 +2,8 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>提案候補マネージャー</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>今なにする？</title>
 <style>
   :root {
     --paper: #faf7f0;
@@ -14,274 +14,505 @@
     --accent-soft: #e8eaf5;
     --danger: #b4483a;
   }
-  * { box-sizing: border-box; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
   body {
     margin: 0;
     background: var(--paper);
     color: var(--ink);
     font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", sans-serif;
     line-height: 1.5;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
   main {
-    max-width: 760px;
+    max-width: 480px;
     margin: 0 auto;
-    padding: 40px 20px 80px;
+    padding: 20px 16px 24px;
+    min-height: 100%;
+  }
+  header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 18px;
   }
   h1 {
     font-family: Georgia, "Hiragino Mincho ProN", serif;
-    font-size: 28px;
+    font-size: 22px;
     font-weight: 600;
-    margin: 0 0 4px;
+    margin: 0;
   }
-  .sub {
-    color: var(--ink-soft);
-    font-size: 14px;
-    margin: 0 0 32px;
+  h2 { font-size: 16px; margin: 0 0 12px; color: var(--ink-soft); font-weight: 600; }
+
+  .back {
+    background: none;
+    border: none;
+    color: var(--accent);
+    font-size: 15px;
+    padding: 6px 4px;
+    cursor: pointer;
   }
-  section {
-    margin-bottom: 32px;
+
+  /* --- picker --- */
+  .tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-bottom: 16px;
   }
-  label {
-    display: block;
-    font-size: 12px;
-    color: var(--ink-soft);
-    margin-bottom: 4px;
-  }
-  input[type="text"], input[type="password"], input[type="number"] {
-    width: 100%;
-    padding: 8px 10px;
+  .tab {
+    padding: 12px 4px;
+    border-radius: 8px;
     border: 1px solid var(--line);
-    border-radius: 4px;
+    background: #fff;
+    font-size: 15px;
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+  .tab.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    font-weight: 600;
+  }
+  .task-list { display: flex; flex-direction: column; gap: 10px; }
+  .task-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    width: 100%;
+    text-align: left;
+    padding: 16px 16px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: #fff;
+    cursor: pointer;
+    min-height: 52px;
+  }
+  .task-btn:active { background: var(--accent-soft); border-color: var(--accent); }
+  .task-subject { font-size: 12px; color: var(--ink-soft); }
+  .task-label { font-size: 16px; font-weight: 500; }
+  .empty { color: var(--ink-soft); font-size: 14px; padding: 20px 4px; }
+
+  #pickStatus, #scheduleStatus, #adminStatus {
+    font-size: 13px;
+    margin-top: 14px;
+    color: var(--ink-soft);
+    min-height: 18px;
+  }
+  .ok { color: var(--accent); }
+  .error { color: var(--danger); }
+
+  footer {
+    display: flex;
+    gap: 8px;
+    margin-top: 28px;
+    justify-content: center;
+  }
+  .link-btn {
+    background: none;
+    border: none;
+    color: var(--ink-soft);
+    font-size: 13px;
+    padding: 8px 10px;
+    cursor: pointer;
+  }
+
+  /* --- schedule --- */
+  .schedule-item {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 14px;
+    background: #fff;
+  }
+  .schedule-item img { width: 100%; display: block; }
+  .schedule-item p { margin: 0; padding: 8px 10px; font-size: 13px; color: var(--ink-soft); }
+  .upload-box {
+    border-top: 1px solid var(--line);
+    margin-top: 18px;
+    padding-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  input[type="text"], input[type="password"], input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
     background: #fff;
     color: var(--ink);
     font-size: 14px;
   }
-  .row-fields {
+
+  /* --- admin --- */
+  .admin-row {
     display: grid;
-    grid-template-columns: 2fr 1.4fr 1.4fr 1.6fr 0.7fr auto;
-    gap: 8px;
-    align-items: end;
-    padding: 12px 0;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    padding: 10px 0;
     border-bottom: 1px solid var(--line);
   }
-  .row-fields:first-of-type { border-top: 1px solid var(--line); }
-  .head-row {
-    display: grid;
-    grid-template-columns: 2fr 1.4fr 1.4fr 1.6fr 0.7fr auto;
-    gap: 8px;
-    font-size: 12px;
-    color: var(--ink-soft);
-    padding-bottom: 6px;
-  }
-  button {
+  .admin-row input { font-size: 13px; padding: 8px; }
+  .admin-row .f-remove { grid-column: span 2; }
+
+  button.primary, button.danger, .toolbar button {
     font-size: 14px;
-    padding: 8px 14px;
-    border-radius: 4px;
+    padding: 10px 14px;
+    border-radius: 6px;
     border: 1px solid var(--line);
     background: #fff;
     color: var(--ink);
     cursor: pointer;
   }
-  button.primary {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #fff;
-  }
-  button.danger {
-    color: var(--danger);
-    border-color: var(--danger);
-    background: #fff;
-  }
-  .toolbar {
-    display: flex;
-    gap: 8px;
-    margin-top: 16px;
-    flex-wrap: wrap;
-  }
-  #status {
-    font-size: 13px;
-    margin-top: 10px;
-    color: var(--ink-soft);
-    white-space: pre-wrap;
-  }
-  #status.error { color: var(--danger); }
-  #status.ok { color: var(--accent); }
-  .hint {
-    font-size: 12px;
-    color: var(--ink-soft);
-    margin-top: 6px;
-  }
-  .avoid-field {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    max-width: 220px;
-  }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  button.danger { color: var(--danger); border-color: var(--danger); }
+  .toolbar { display: flex; gap: 8px; margin: 14px 0; flex-wrap: wrap; }
+  .hint { font-size: 12px; color: var(--ink-soft); margin-top: 4px; }
 </style>
 </head>
 <body>
 <main>
-  <h1>提案候補マネージャー</h1>
-  <p class="sub">context-tasks.json を直接編集・保存します。保存すると数分以内にiPhone側の提案にも反映されます。</p>
+  <header><h1 id="viewTitle">今なにする？</h1></header>
 
-  <section>
-    <label for="token">GitHub Personal Access Token</label>
-    <input type="password" id="token" placeholder="このブラウザにだけ保存されます">
-    <p class="hint">Fine-grained tokenを推奨。対象リポジトリのみ、Contents: Read and write の権限で作成してください。</p>
+  <!-- 画面1: 選ぶ -->
+  <section id="view-picker">
+    <div class="tabs" id="tabs">
+      <button class="tab" data-ctx="学校">学校</button>
+      <button class="tab" data-ctx="移動中">移動中</button>
+      <button class="tab" data-ctx="家">家</button>
+    </div>
+    <div id="taskList" class="task-list"></div>
+    <div id="pickStatus"></div>
   </section>
 
-  <section>
+  <!-- 画面2: 小テストの予定表 -->
+  <section id="view-schedule" hidden>
+    <button class="back" data-back>← 戻る</button>
+    <h2>小テストの予定表</h2>
+    <div id="scheduleList"></div>
+    <div class="upload-box">
+      <input type="file" id="photoInput" accept="image/*" capture="environment">
+      <input type="text" id="captionInput" placeholder="メモ（任意）">
+      <button id="uploadBtn" class="primary">追加する</button>
+    </div>
+    <div id="scheduleStatus"></div>
+  </section>
+
+  <!-- 画面3: 候補の管理 -->
+  <section id="view-admin" hidden>
+    <button class="back" data-back>← 戻る</button>
+    <h2>候補の管理</h2>
+    <label class="hint" for="token">GitHub Personal Access Token</label>
+    <input type="password" id="token" placeholder="このブラウザにだけ保存されます">
+    <p class="hint">Fine-grained token・対象リポジトリのみ・Contents: Read and write</p>
     <div class="toolbar">
       <button id="loadBtn">読み込む</button>
       <button id="addBtn">行を追加</button>
       <button id="saveBtn" class="primary">保存する</button>
     </div>
-    <div id="status"></div>
-  </section>
-
-  <section>
-    <label for="avoidLastN">直近何件の提案を避けるか (avoidLastN)</label>
-    <div class="avoid-field">
-      <input type="number" id="avoidLastN" min="0" value="2">
-    </div>
-  </section>
-
-  <section>
-    <div class="head-row">
-      <div>提案文 (label)</div>
-      <div>教科 (subject)</div>
-      <div>状態 (contexts, カンマ区切り)</div>
-      <div>ID</div>
-      <div>重み</div>
-      <div></div>
-    </div>
     <div id="rows"></div>
+    <div id="adminStatus"></div>
   </section>
+
+  <footer id="footerNav">
+    <button id="openSchedule" class="link-btn">📋 小テストの予定表</button>
+    <button id="openAdmin" class="link-btn">⚙️ 候補の管理</button>
+  </footer>
 </main>
 
 <script>
 const OWNER = "gari315";
 const REPO = "gari315-study-suggestions";
-const PATH = "context-tasks.json";
-const API_URL = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${PATH}`;
+const API_BASE = `https://api.github.com/repos/${OWNER}/${REPO}/contents/`;
+const CONTEXTS = ["学校", "移動中", "家"];
 
-const tokenInput = document.getElementById("token");
-const rowsEl = document.getElementById("rows");
-const statusEl = document.getElementById("status");
-const avoidInput = document.getElementById("avoidLastN");
+function getToken() { return localStorage.getItem("gh_token") || ""; }
+function setToken(v) { localStorage.setItem("gh_token", v); }
+function utf8ToBase64(str) { return btoa(unescape(encodeURIComponent(str))); }
+function base64ToUtf8(str) { return decodeURIComponent(escape(atob(str))); }
+function escapeHtml(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+function escapeAttr(s) { return String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;"); }
 
-let currentSha = null;
-
-tokenInput.value = localStorage.getItem("gh_token") || "";
-tokenInput.addEventListener("change", () => {
-  localStorage.setItem("gh_token", tokenInput.value.trim());
-});
-
-function utf8ToBase64(str) {
-  return btoa(unescape(encodeURIComponent(str)));
-}
-function base64ToUtf8(str) {
-  return decodeURIComponent(escape(atob(str)));
+async function ghGetJSON(path) {
+  const token = getToken();
+  const res = await fetch(API_BASE + path, {
+    headers: { Authorization: `Bearer ${token}`, Accept: "application/vnd.github+json" }
+  });
+  if (!res.ok) throw new Error(`${path} の取得に失敗 (${res.status})`);
+  const json = await res.json();
+  return { data: JSON.parse(base64ToUtf8(json.content)), sha: json.sha };
 }
 
-function setStatus(msg, kind) {
-  statusEl.textContent = msg;
-  statusEl.className = kind || "";
+async function ghPutJSON(path, obj, sha, message) {
+  const token = getToken();
+  const res = await fetch(API_BASE + path, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/vnd.github+json",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      message: message || `update ${path}`,
+      content: utf8ToBase64(JSON.stringify(obj, null, 2)),
+      sha: sha || undefined
+    })
+  });
+  if (!res.ok) throw new Error(`${path} の保存に失敗 (${res.status})`);
+  const json = await res.json();
+  return json.content.sha;
 }
+
+async function ghPutBinary(path, base64, message) {
+  const token = getToken();
+  const res = await fetch(API_BASE + path, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/vnd.github+json",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ message: message || `add ${path}`, content: base64 })
+  });
+  if (!res.ok) throw new Error(`画像のアップロードに失敗 (${res.status})`);
+  return res.json();
+}
+
+function triggerWidgetRefresh() {
+  const name = encodeURIComponent("ウィジェット更新");
+  window.location.href = `shortcuts://x-callback-url/run-shortcut?name=${name}`;
+}
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(",")[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+/* ---------- 画面切り替え ---------- */
+function showView(name) {
+  document.getElementById("view-picker").hidden = name !== "picker";
+  document.getElementById("view-schedule").hidden = name !== "schedule";
+  document.getElementById("view-admin").hidden = name !== "admin";
+  document.getElementById("footerNav").hidden = name !== "picker";
+  document.getElementById("viewTitle").textContent =
+    name === "picker" ? "今なにする？" : name === "schedule" ? "小テストの予定表" : "候補の管理";
+}
+
+/* ---------- 画面1: 選ぶ ---------- */
+let currentCtx = "学校";
+let tasksCache = null;
+
+function initPicker() {
+  const hashCtx = decodeURIComponent((location.hash || "").replace("#context=", ""));
+  if (CONTEXTS.includes(hashCtx)) currentCtx = hashCtx;
+  document.querySelectorAll(".tab").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.ctx === currentCtx);
+    btn.addEventListener("click", () => {
+      currentCtx = btn.dataset.ctx;
+      document.querySelectorAll(".tab").forEach(b => b.classList.toggle("active", b === btn));
+      renderTaskList();
+    });
+  });
+  renderTaskList();
+}
+
+async function renderTaskList() {
+  const listEl = document.getElementById("taskList");
+  const statusEl = document.getElementById("pickStatus");
+  if (!getToken()) {
+    listEl.innerHTML = "";
+    statusEl.textContent = "先に「候補の管理」でトークンを設定してください";
+    statusEl.className = "error";
+    return;
+  }
+  statusEl.textContent = "読み込み中...";
+  statusEl.className = "";
+  try {
+    if (!tasksCache) {
+      const { data } = await ghGetJSON("context-tasks.json");
+      tasksCache = data.tasks || [];
+    }
+    const items = tasksCache.filter(t => (t.contexts || []).includes(currentCtx));
+    listEl.innerHTML = "";
+    if (items.length === 0) {
+      listEl.innerHTML = `<p class="empty">この状態向けの候補がありません</p>`;
+    }
+    items.forEach(t => {
+      const btn = document.createElement("button");
+      btn.className = "task-btn";
+      btn.innerHTML = `<span class="task-subject">${escapeHtml(t.subject || "")}</span><span class="task-label">${escapeHtml(t.label)}</span>`;
+      btn.addEventListener("click", () => selectTask(t));
+      listEl.appendChild(btn);
+    });
+    statusEl.textContent = "";
+  } catch (e) {
+    statusEl.textContent = "読み込みに失敗しました: " + e.message;
+    statusEl.className = "error";
+  }
+}
+
+async function selectTask(task) {
+  const statusEl = document.getElementById("pickStatus");
+  statusEl.textContent = "保存中...";
+  statusEl.className = "";
+  try {
+    let sha = null;
+    try { sha = (await ghGetJSON("current-state.json")).sha; } catch (e) {}
+    await ghPutJSON("current-state.json", {
+      context: currentCtx,
+      task: { id: task.id, label: task.label, subject: task.subject },
+      at: new Date().toISOString()
+    }, sha, `set current: ${currentCtx} / ${task.label}`);
+    statusEl.textContent = "選択しました：" + task.label;
+    statusEl.className = "ok";
+    setTimeout(triggerWidgetRefresh, 400);
+  } catch (e) {
+    statusEl.textContent = "保存に失敗しました: " + e.message;
+    statusEl.className = "error";
+  }
+}
+
+/* ---------- 画面2: 小テストの予定表 ---------- */
+async function renderSchedule() {
+  const listEl = document.getElementById("scheduleList");
+  const statusEl = document.getElementById("scheduleStatus");
+  if (!getToken()) { statusEl.textContent = "先に「候補の管理」でトークンを設定してください"; statusEl.className = "error"; return; }
+  statusEl.textContent = "読み込み中...";
+  statusEl.className = "";
+  try {
+    const { data } = await ghGetJSON("quiz-schedule.json");
+    listEl.innerHTML = "";
+    (data.items || []).slice().reverse().forEach(item => {
+      const div = document.createElement("div");
+      div.className = "schedule-item";
+      div.innerHTML = `
+        <img src="https://raw.githubusercontent.com/${OWNER}/${REPO}/main/${item.path}" alt="">
+        <p>${escapeHtml(item.caption || "")}</p>
+      `;
+      listEl.appendChild(div);
+    });
+    statusEl.textContent = "";
+  } catch (e) {
+    statusEl.textContent = "読み込みに失敗しました: " + e.message;
+    statusEl.className = "error";
+  }
+}
+
+async function uploadPhoto() {
+  const fileInput = document.getElementById("photoInput");
+  const captionInput = document.getElementById("captionInput");
+  const statusEl = document.getElementById("scheduleStatus");
+  const file = fileInput.files[0];
+  if (!file) { statusEl.textContent = "写真を選んでください"; statusEl.className = "error"; return; }
+
+  statusEl.textContent = "アップロード中...";
+  statusEl.className = "";
+  try {
+    const base64 = await fileToBase64(file);
+    const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+    const path = `quiz-schedule/${Date.now()}.${ext}`;
+    await ghPutBinary(path, base64, "add quiz schedule photo");
+
+    const { data, sha } = await ghGetJSON("quiz-schedule.json");
+    data.items = data.items || [];
+    data.items.push({ path, caption: captionInput.value.trim(), at: new Date().toISOString() });
+    await ghPutJSON("quiz-schedule.json", data, sha, "update quiz-schedule.json");
+
+    fileInput.value = "";
+    captionInput.value = "";
+    statusEl.textContent = "追加しました";
+    statusEl.className = "ok";
+    await renderSchedule();
+  } catch (e) {
+    statusEl.textContent = "アップロードに失敗しました: " + e.message;
+    statusEl.className = "error";
+  }
+}
+
+/* ---------- 画面3: 候補の管理 ---------- */
+let adminSha = null;
 
 function makeRow(task) {
   const div = document.createElement("div");
-  div.className = "row-fields";
+  div.className = "admin-row";
   div.innerHTML = `
-    <input type="text" class="f-label" value="${escapeAttr(task.label || "")}">
-    <input type="text" class="f-subject" value="${escapeAttr(task.subject || "")}">
-    <input type="text" class="f-contexts" value="${escapeAttr((task.contexts || []).join(", "))}">
-    <input type="text" class="f-id" value="${escapeAttr(task.id || "")}">
-    <input type="number" class="f-weight" value="${task.weight ?? 1}" min="1">
+    <input type="text" class="f-label" placeholder="提案文" value="${escapeAttr(task.label || "")}">
+    <input type="text" class="f-subject" placeholder="教科" value="${escapeAttr(task.subject || "")}">
+    <input type="text" class="f-contexts" placeholder="状態(カンマ区切り)" value="${escapeAttr((task.contexts || []).join(", "))}">
+    <input type="text" class="f-id" placeholder="ID" value="${escapeAttr(task.id || "")}">
     <button class="danger f-remove">削除</button>
   `;
   div.querySelector(".f-remove").addEventListener("click", () => div.remove());
   return div;
 }
 
-function escapeAttr(s) {
-  return String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;");
-}
-
-function slugify(label) {
-  return "task_" + Math.random().toString(36).slice(2, 8);
-}
-
-document.getElementById("addBtn").addEventListener("click", () => {
-  rowsEl.appendChild(makeRow({ id: slugify(""), label: "", subject: "", contexts: [], weight: 1 }));
-});
-
-document.getElementById("loadBtn").addEventListener("click", loadData);
-document.getElementById("saveBtn").addEventListener("click", saveData);
-
-async function loadData() {
-  const token = tokenInput.value.trim();
-  if (!token) { setStatus("先にトークンを入力してください", "error"); return; }
-  setStatus("読み込み中...");
+async function loadAdminTasks() {
+  const statusEl = document.getElementById("adminStatus");
+  statusEl.textContent = "読み込み中...";
+  statusEl.className = "";
   try {
-    const res = await fetch(API_URL, {
-      headers: { Authorization: `Bearer ${token}`, Accept: "application/vnd.github+json" }
-    });
-    if (!res.ok) throw new Error(`GitHub API エラー: ${res.status}`);
-    const json = await res.json();
-    currentSha = json.sha;
-    const data = JSON.parse(base64ToUtf8(json.content));
-    avoidInput.value = data.avoidLastN ?? 2;
+    const { data, sha } = await ghGetJSON("context-tasks.json");
+    adminSha = sha;
+    const rowsEl = document.getElementById("rows");
     rowsEl.innerHTML = "";
     (data.tasks || []).forEach(t => rowsEl.appendChild(makeRow(t)));
-    setStatus(`読み込み完了（${(data.tasks || []).length}件）`, "ok");
+    statusEl.textContent = `読み込み完了（${(data.tasks || []).length}件）`;
+    statusEl.className = "ok";
   } catch (e) {
-    setStatus("読み込みに失敗しました: " + e.message, "error");
+    statusEl.textContent = "読み込みに失敗: " + e.message;
+    statusEl.className = "error";
   }
 }
 
-async function saveData() {
-  const token = tokenInput.value.trim();
-  if (!token) { setStatus("先にトークンを入力してください", "error"); return; }
-  if (!currentSha) { setStatus("先に「読み込む」を実行してください", "error"); return; }
-
-  const tasks = Array.from(rowsEl.children).map(row => ({
+async function saveAdminTasks() {
+  const statusEl = document.getElementById("adminStatus");
+  if (!adminSha) { statusEl.textContent = "先に「読み込む」を実行してください"; statusEl.className = "error"; return; }
+  const rows = Array.from(document.getElementById("rows").children);
+  const tasks = rows.map(row => ({
     id: row.querySelector(".f-id").value.trim(),
     label: row.querySelector(".f-label").value.trim(),
     subject: row.querySelector(".f-subject").value.trim(),
-    contexts: row.querySelector(".f-contexts").value.split(",").map(s => s.trim()).filter(Boolean),
-    weight: Number(row.querySelector(".f-weight").value) || 1
+    contexts: row.querySelector(".f-contexts").value.split(",").map(s => s.trim()).filter(Boolean)
   }));
-
   const invalid = tasks.find(t => !t.id || !t.label || t.contexts.length === 0);
-  if (invalid) { setStatus("IDと提案文と状態は必須です（空の行があります）", "error"); return; }
-
-  const data = { avoidLastN: Number(avoidInput.value) || 0, tasks };
-  const content = utf8ToBase64(JSON.stringify(data, null, 2));
-
-  setStatus("保存中...");
+  if (invalid) { statusEl.textContent = "IDと提案文と状態は必須です（空の行があります）"; statusEl.className = "error"; return; }
+  statusEl.textContent = "保存中...";
+  statusEl.className = "";
   try {
-    const res = await fetch(API_URL, {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: "application/vnd.github+json",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        message: "update context-tasks.json",
-        content,
-        sha: currentSha
-      })
-    });
-    if (!res.ok) throw new Error(`GitHub API エラー: ${res.status}`);
-    const json = await res.json();
-    currentSha = json.content.sha;
-    setStatus("保存しました", "ok");
+    adminSha = await ghPutJSON("context-tasks.json", { tasks }, adminSha, "update context-tasks.json");
+    tasksCache = tasks;
+    statusEl.textContent = "保存しました";
+    statusEl.className = "ok";
   } catch (e) {
-    setStatus("保存に失敗しました: " + e.message, "error");
+    statusEl.textContent = "保存に失敗: " + e.message;
+    statusEl.className = "error";
   }
 }
+
+/* ---------- 初期化 ---------- */
+document.getElementById("token").value = getToken();
+document.getElementById("token").addEventListener("change", e => setToken(e.target.value.trim()));
+document.getElementById("loadBtn").addEventListener("click", loadAdminTasks);
+document.getElementById("addBtn").addEventListener("click", () => {
+  document.getElementById("rows").appendChild(makeRow({ id: "task_" + Math.random().toString(36).slice(2, 8), label: "", subject: "", contexts: [] }));
+});
+document.getElementById("saveBtn").addEventListener("click", saveAdminTasks);
+document.getElementById("uploadBtn").addEventListener("click", uploadPhoto);
+
+document.getElementById("openSchedule").addEventListener("click", () => { showView("schedule"); renderSchedule(); });
+document.getElementById("openAdmin").addEventListener("click", () => showView("admin"));
+document.querySelectorAll("[data-back]").forEach(b => b.addEventListener("click", () => showView("picker")));
+
+showView("picker");
+initPicker();
 </script>
 </body>
 </html>

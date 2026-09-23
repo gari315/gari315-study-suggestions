@@ -76,7 +76,18 @@
     color: #fff;
     font-weight: 600;
   }
-  .task-list { display: flex; flex-direction: column; gap: 10px; }
+  .task-list { display: flex; flex-direction: column; gap: 14px; }
+  .task-group { display: flex; flex-direction: column; gap: 8px; }
+  .task-group-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    padding: 0 2px;
+  }
+  .photo-link { padding: 2px 4px; font-size: 12px; }
   .task-btn {
     display: flex;
     flex-direction: column;
@@ -138,7 +149,7 @@
     flex-direction: column;
     gap: 10px;
   }
-  input[type="text"], input[type="password"], input[type="file"] {
+  input[type="text"], input[type="password"], input[type="file"], select {
     width: 100%;
     padding: 10px;
     border: 1px solid var(--line);
@@ -309,6 +320,20 @@ const REPO = "gari315-study-suggestions";
 const API_BASE = `https://api.github.com/repos/${OWNER}/${REPO}/contents/`;
 const CONTEXTS = ["学校", "移動中", "家"];
 
+const CATEGORIES = [
+  { id: "kokugo", label: "国語", isList: true },
+  { id: "math", label: "数学", isList: true },
+  { id: "eigo", label: "英語", isList: true },
+  { id: "rika", label: "理科", isList: true },
+  { id: "kyukei", label: "休憩", isList: false },
+  { id: "news", label: "ニュース", isList: false },
+  { id: "asatest", label: "朝テスト", isList: true, allowPhoto: true },
+  { id: "teiki", label: "定期テスト", isList: true }
+];
+function categoryDef(id) {
+  return CATEGORIES.find(c => c.id === id) || { id, label: id, isList: true };
+}
+
 function getToken() { return localStorage.getItem("gh_token") || ""; }
 function setToken(v) { localStorage.setItem("gh_token", v); }
 function utf8ToBase64(str) { return btoa(unescape(encodeURIComponent(str))); }
@@ -426,14 +451,57 @@ async function renderTaskList() {
     listEl.innerHTML = "";
     if (items.length === 0) {
       listEl.innerHTML = `<p class="empty">この状態向けの候補がありません</p>`;
+      statusEl.textContent = "";
+      return;
     }
+
+    const byCategory = {};
     items.forEach(t => {
-      const btn = document.createElement("button");
-      btn.className = "task-btn";
-      btn.innerHTML = `<span class="task-subject">${escapeHtml(t.subject || "")}</span><span class="task-label">${escapeHtml(t.label)}</span>`;
-      btn.addEventListener("click", () => selectTask(t));
-      listEl.appendChild(btn);
+      const cat = t.category || "その他";
+      (byCategory[cat] = byCategory[cat] || []).push(t);
     });
+    const orderedCatIds = CATEGORIES.map(c => c.id).filter(id => byCategory[id]);
+    Object.keys(byCategory).forEach(id => { if (!orderedCatIds.includes(id)) orderedCatIds.push(id); });
+
+    orderedCatIds.forEach(catId => {
+      const def = categoryDef(catId);
+      const catTasks = byCategory[catId];
+
+      if (def.isList === false) {
+        // 単一項目カテゴリはそのままボタン1つとして表示
+        const t = catTasks[0];
+        const btn = document.createElement("button");
+        btn.className = "task-btn";
+        btn.innerHTML = `<span class="task-subject">${escapeHtml(def.label)}</span><span class="task-label">${escapeHtml(t.label)}</span>`;
+        btn.addEventListener("click", () => selectTask(t));
+        listEl.appendChild(btn);
+        return;
+      }
+
+      const group = document.createElement("div");
+      group.className = "task-group";
+      const heading = document.createElement("div");
+      heading.className = "task-group-heading";
+      heading.textContent = def.label;
+      if (def.allowPhoto) {
+        const photoLink = document.createElement("button");
+        photoLink.className = "link-btn photo-link";
+        photoLink.textContent = "📷 写真を追加";
+        photoLink.addEventListener("click", () => { showView("schedule"); renderSchedule(); });
+        heading.appendChild(photoLink);
+      }
+      group.appendChild(heading);
+
+      catTasks.forEach(t => {
+        const btn = document.createElement("button");
+        btn.className = "task-btn";
+        btn.innerHTML = `<span class="task-label">${escapeHtml(t.label)}</span>`;
+        btn.addEventListener("click", () => selectTask(t));
+        group.appendChild(btn);
+      });
+      listEl.appendChild(group);
+    });
+
     statusEl.textContent = "";
   } catch (e) {
     statusEl.textContent = "読み込みに失敗しました: " + e.message;
@@ -686,9 +754,13 @@ let adminSha = null;
 function makeRow(task) {
   const div = document.createElement("div");
   div.className = "admin-row";
+  const catOptions = CATEGORIES.map(c =>
+    `<option value="${c.id}" ${task.category === c.id ? "selected" : ""}>${c.label}</option>`
+  ).join("");
   div.innerHTML = `
     <input type="text" class="f-label" placeholder="提案文" value="${escapeAttr(task.label || "")}">
-    <input type="text" class="f-subject" placeholder="教科" value="${escapeAttr(task.subject || "")}">
+    <input type="text" class="f-subject" placeholder="教科(記録用)" value="${escapeAttr(task.subject || "")}">
+    <select class="f-category">${catOptions}</select>
     <input type="text" class="f-contexts" placeholder="状態(カンマ区切り)" value="${escapeAttr((task.contexts || []).join(", "))}">
     <input type="text" class="f-id" placeholder="ID" value="${escapeAttr(task.id || "")}">
     <label class="checkbox-field"><input type="checkbox" class="f-exclude" ${task.excludeFromLog ? "checked" : ""}> 勉強時間に含めない</label>
@@ -724,6 +796,7 @@ async function saveAdminTasks() {
     id: row.querySelector(".f-id").value.trim(),
     label: row.querySelector(".f-label").value.trim(),
     subject: row.querySelector(".f-subject").value.trim(),
+    category: row.querySelector(".f-category").value,
     contexts: row.querySelector(".f-contexts").value.split(",").map(s => s.trim()).filter(Boolean),
     excludeFromLog: row.querySelector(".f-exclude").checked
   }));
@@ -747,7 +820,7 @@ document.getElementById("token").value = getToken();
 document.getElementById("token").addEventListener("change", e => setToken(e.target.value.trim()));
 document.getElementById("loadBtn").addEventListener("click", loadAdminTasks);
 document.getElementById("addBtn").addEventListener("click", () => {
-  document.getElementById("rows").appendChild(makeRow({ id: "task_" + Math.random().toString(36).slice(2, 8), label: "", subject: "", contexts: [] }));
+  document.getElementById("rows").appendChild(makeRow({ id: "task_" + Math.random().toString(36).slice(2, 8), label: "", subject: "", category: CATEGORIES[0].id, contexts: [] }));
 });
 document.getElementById("saveBtn").addEventListener("click", saveAdminTasks);
 document.getElementById("uploadBtn").addEventListener("click", uploadPhoto);

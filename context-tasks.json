@@ -1,22 +1,13 @@
-// context-tasks.js
-// 提案候補の一覧。ここを編集するだけで提案内容を増減・調整できる。
-//
-// id       : 重複判定に使う識別子（英数字、他と被らなければ何でもよい）
-// label    : ウィジェットに表示される提案文
-// subject  : 教科名（表示用）
-// contexts : この提案を出してよい状態。"学校" "移動中" "家" など好きな名前を使える
-// weight   : 数字が大きいほど選ばれやすくなる（目安 1〜3）
-
-module.exports = {
-  TASKS: [
-    { id: "eng_listen", label: "英語リスニングを10分", subject: "英語", contexts: ["移動中"], weight: 3 },
-    { id: "eng_word", label: "英単語を10分", subject: "英語", contexts: ["移動中", "学校", "家"], weight: 2 },
-    { id: "math_4step", label: "数学 4STEPを1テーマ", subject: "数学", contexts: ["家"], weight: 3 },
-    { id: "asa_test", label: "朝テストの範囲を見直す", subject: "小テスト", contexts: ["学校"], weight: 2 },
-    { id: "chem_read", label: "化学の教科書を1節読む", subject: "化学", contexts: ["家", "学校"], weight: 1 },
-    { id: "kokugo_kanji", label: "漢字・語彙を10問", subject: "国語", contexts: ["移動中", "学校"], weight: 1 }
-  ],
-
-  // 直近何件の提案を「できるだけ避ける」対象にするか
-  AVOID_LAST_N: 2
+{
+  "tasks": [
+    { "id": "eng_word", "label": "英単熟語", "subject": "英語", "contexts": ["移動中", "学校", "家"], "excludeFromLog": false },
+    { "id": "math_blue-chart", "label": "青チャート", "subject": "数学", "contexts": ["家", "学校"], "excludeFromLog": false },
+    { "id": "morning_test", "label": "朝テスト", "subject": "小テスト", "contexts": ["移動中", "学校", "家"], "excludeFromLog": false },
+    { "id": "chem_working", "label": "化学ワーク", "subject": "化学", "contexts": ["家", "学校"], "excludeFromLog": false },
+    { "id": "kokugo_test", "label": "国語頻出", "subject": "国語", "contexts": ["移動中", "学校", "家"], "excludeFromLog": false },
+    { "id": "task_none", "label": "休憩", "subject": "無", "contexts": ["移動中", "学校", "家"], "excludeFromLog": true },
+    { "id": "eng_grammar", "label": "英文法", "subject": "英語", "contexts": ["学校", "家"], "excludeFromLog": false },
+    { "id": "know_news", "label": "ニュース", "subject": "情報収集", "contexts": ["移動中"], "excludeFromLog": false },
+    { "id": "science", "label": "小テスト(物化)", "subject": "物理,化学", "contexts": ["家", "学校"], "excludeFromLog": false }
+  ]
 }

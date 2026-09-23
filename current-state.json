@@ -1,9 +1,9 @@
 {
-  "context": "家",
+  "context": "移動中",
   "task": {
-    "id": "task_none",
-    "label": "休憩",
-    "subject": "無"
+    "id": "know_news",
+    "label": "ニュース",
+    "subject": "情報収集"
   },
-  "at": "2026-09-23T07:37:02.500Z"
+  "at": "2026-09-23T08:44:39.057Z"
 }

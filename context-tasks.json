@@ -1,10 +1,88 @@
 {
   "tasks": [
-    { "id": "eng_listen", "label": "英語リスニングを10分", "subject": "英語", "contexts": ["移動中"] },
-    { "id": "eng_word", "label": "英単語を10分", "subject": "英語", "contexts": ["移動中", "学校", "家"] },
-    { "id": "math_4step", "label": "数学 4STEPを1テーマ", "subject": "数学", "contexts": ["家"] },
-    { "id": "asa_test", "label": "朝テストの範囲を見直す", "subject": "小テスト", "contexts": ["学校"] },
-    { "id": "chem_read", "label": "化学の教科書を1節読む", "subject": "化学", "contexts": ["家", "学校"] },
-    { "id": "kokugo_kanji", "label": "漢字・語彙を10問", "subject": "国語", "contexts": ["移動中", "学校"] }
+    {
+      "id": "eng_word",
+      "label": "英単熟語",
+      "subject": "英語",
+      "contexts": [
+        "移動中",
+        "学校",
+        "家"
+      ]
+    },
+    {
+      "id": "math_blue-chart",
+      "label": "青チャート",
+      "subject": "数学",
+      "contexts": [
+        "家",
+        "学校"
+      ]
+    },
+    {
+      "id": "morning_test",
+      "label": "朝テスト",
+      "subject": "小テスト",
+      "contexts": [
+        "移動中",
+        "学校",
+        "家"
+      ]
+    },
+    {
+      "id": "chem_working",
+      "label": "化学ワーク",
+      "subject": "化学",
+      "contexts": [
+        "家",
+        "学校"
+      ]
+    },
+    {
+      "id": "kokugo_test",
+      "label": "国語頻出",
+      "subject": "国語",
+      "contexts": [
+        "移動中",
+        "学校",
+        "家"
+      ]
+    },
+    {
+      "id": "task_none",
+      "label": "休憩",
+      "subject": "無",
+      "contexts": [
+        "移動中",
+        "学校",
+        "家"
+      ]
+    },
+    {
+      "id": "eng_grammar",
+      "label": "英文法",
+      "subject": "英語",
+      "contexts": [
+        "学校",
+        "家"
+      ]
+    },
+    {
+      "id": "know_news",
+      "label": "ニュース",
+      "subject": "情報収集",
+      "contexts": [
+        "移動中"
+      ]
+    },
+    {
+      "id": "science",
+      "label": "小テスト(物化)",
+      "subject": "物理,化学",
+      "contexts": [
+        "家",
+        "学校"
+      ]
+    }
   ]
 }

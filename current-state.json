@@ -1,9 +1,9 @@
 {
   "context": "学校",
   "task": {
-    "id": "chem_read",
-    "label": "化学の教科書を1節読む",
-    "subject": "化学"
+    "id": "kokugo_kanji",
+    "label": "漢字・語彙を10問",
+    "subject": "国語"
   },
-  "at": "2026-09-23T01:02:02.620Z"
+  "at": "2026-09-23T01:03:47.589Z"
 }

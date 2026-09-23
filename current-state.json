@@ -1,9 +1,9 @@
 {
-  "context": "学校",
+  "context": "移動中",
   "task": {
-    "id": "eng_word",
-    "label": "英単語を10分",
-    "subject": "英語"
+    "id": "kokugo_kanji",
+    "label": "漢字・語彙を10問",
+    "subject": "国語"
   },
-  "at": "2026-09-23T01:55:26.322Z"
+  "at": "2026-09-23T02:01:40.613Z"
 }

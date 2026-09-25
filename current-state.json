@@ -1,9 +1,9 @@
 {
   "context": "家",
   "task": {
-    "id": "task_none",
-    "label": "休憩",
-    "subject": "休憩"
+    "id": "chem_working",
+    "label": "化学ワーク",
+    "subject": "化学"
   },
-  "at": "2026-09-25T13:46:28.416Z"
+  "at": "2026-09-25T23:41:50.948Z"
 }

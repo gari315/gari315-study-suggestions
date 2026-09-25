@@ -259,6 +259,16 @@
       "end": "2026-09-25T11:40:05.825Z",
       "minutes": 73,
       "excluded": false
+    },
+    {
+      "taskId": "task_none",
+      "subject": "休憩",
+      "label": "休憩",
+      "context": "学校",
+      "start": "2026-09-25T11:40:06.743Z",
+      "end": "2026-09-25T13:46:26.832Z",
+      "minutes": 126,
+      "excluded": true
     }
   ]
 }

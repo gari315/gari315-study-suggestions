@@ -389,6 +389,16 @@
       "end": "2026-09-26T07:46:39.785Z",
       "minutes": 1,
       "excluded": true
+    },
+    {
+      "taskId": "chem_working",
+      "subject": "化学",
+      "label": "化学ワーク",
+      "context": "家",
+      "start": "2026-09-26T07:46:40.778Z",
+      "end": "2026-09-26T08:19:15.987Z",
+      "minutes": 33,
+      "excluded": false
     }
   ]
 }

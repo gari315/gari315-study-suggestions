@@ -489,6 +489,16 @@
       "end": "2026-09-27T07:02:32.316Z",
       "minutes": 292,
       "excluded": true
+    },
+    {
+      "taskId": "math_blue-chart",
+      "subject": "数学",
+      "label": "青チャート",
+      "context": "家",
+      "start": "2026-09-27T07:02:33.566Z",
+      "end": "2026-09-27T08:04:56.134Z",
+      "minutes": 62,
+      "excluded": false
     }
   ]
 }

@@ -619,6 +619,16 @@
       "end": "2026-09-28T04:54:57.897Z",
       "minutes": 70,
       "excluded": true
+    },
+    {
+      "taskId": "morning_test",
+      "subject": "朝テスト",
+      "label": "朝テスト",
+      "context": "家",
+      "start": "2026-09-28T04:54:58.997Z",
+      "end": "2026-09-28T05:21:21.190Z",
+      "minutes": 26,
+      "excluded": false
     }
   ]
 }

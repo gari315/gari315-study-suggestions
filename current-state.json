@@ -1,9 +1,9 @@
 {
-  "context": "家",
+  "context": "学校",
   "task": {
-    "id": "math_blue-chart",
-    "label": "青チャート",
-    "subject": "数学"
+    "id": "task_none",
+    "label": "休憩",
+    "subject": "休憩"
   },
-  "at": "2026-09-28T05:26:12.097Z"
+  "at": "2026-09-28T05:58:21.403Z"
 }

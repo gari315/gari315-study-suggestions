@@ -539,6 +539,16 @@
       "end": "2026-09-28T00:14:31.154Z",
       "minutes": 32,
       "excluded": false
+    },
+    {
+      "taskId": "task_none",
+      "subject": "休憩",
+      "label": "休憩",
+      "context": "家",
+      "start": "2026-09-28T00:14:32.085Z",
+      "end": "2026-09-28T01:17:35.638Z",
+      "minutes": 63,
+      "excluded": true
     }
   ]
 }

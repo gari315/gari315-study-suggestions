@@ -659,6 +659,16 @@
       "end": "2026-10-02T03:46:07.753Z",
       "minutes": 5628,
       "excluded": true
+    },
+    {
+      "taskId": "science",
+      "subject": "物理",
+      "label": "小テスト物理",
+      "context": "学校",
+      "start": "2026-10-02T03:46:08.873Z",
+      "end": "2026-10-02T03:59:39.444Z",
+      "minutes": 13,
+      "excluded": false
     }
   ]
 }

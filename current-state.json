@@ -1,9 +1,9 @@
 {
   "context": "家",
   "task": {
-    "id": "eng_word",
-    "label": "英単熟語",
-    "subject": "英語"
+    "id": "task_none",
+    "label": "休憩",
+    "subject": "休憩"
   },
-  "at": "2026-10-03T07:03:45.180Z"
+  "at": "2026-10-03T07:36:45.473Z"
 }

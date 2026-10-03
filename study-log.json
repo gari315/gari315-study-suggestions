@@ -679,6 +679,16 @@
       "end": "2026-10-03T07:03:44.084Z",
       "minutes": 1624,
       "excluded": true
+    },
+    {
+      "taskId": "eng_word",
+      "subject": "英語",
+      "label": "英単熟語",
+      "context": "家",
+      "start": "2026-10-03T07:03:45.180Z",
+      "end": "2026-10-03T07:36:44.381Z",
+      "minutes": 33,
+      "excluded": false
     }
   ]
 }

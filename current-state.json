@@ -1,9 +1,9 @@
 {
   "context": "学校",
   "task": {
-    "id": "science",
-    "label": "小テスト物理",
-    "subject": "物理"
+    "id": "task_none",
+    "label": "休憩",
+    "subject": "休憩"
   },
-  "at": "2026-10-29T03:58:54.482Z"
+  "at": "2026-10-29T11:28:28.406Z"
 }
